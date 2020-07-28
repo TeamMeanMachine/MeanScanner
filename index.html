@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MeanTracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=0">
+    <link rel="stylesheet" href="norm.css">
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <h1>MeanTracker</h1>
+    <div id="login">
+      <p>Who are you? Log in with:</p>
+      <p><button disabled>QR Code (soon&trade;)</button></p>
+      <p>- or -</p>
+      <p><label>Username<br><input id="username"></label></p>
+      <p><label>Password<br><input id="password" type="password"></label></p>
+      <p><button onclick="login()">Log in</button></p>
+      <p id="error-text">ACCESS DENIED</p>
+    </div>
+    <div id="main">
+      <p>ACCESS GRANTED</p>
+      <p>Welcome, <span id="name-text"></span>!</p>
+      <p><button onclick="logout()">Log out</button></p>
+      <p><span id="hours-text"></span> hours total</p>
+      <p>You have been <span id="checked-text"></span> for <span id="time-text"></span> min</p>
+      <p><button id="toggle-check"></button></p>
+      <p>History</p>
+      <ul id="history-list"></ul>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>
