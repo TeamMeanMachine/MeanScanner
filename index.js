@@ -2,64 +2,69 @@
 let userBase = [
   {
     name: "Aidan Linerud",
-    pass: "2471",
     totalHours: 42,
     sinceAction: 60,
     history: [
-      { time: "7/27/20 18:30", action: "checked in" },
-      { time: "7/20/20 21:00", action: "checked out" },
-      { time: "7/20/20 18:40", action: "checked in" },
+      { time: "7/27/20 18:30", action: "in" },
+      { time: "7/20/20 21:00", action: "out" },
+      { time: "7/20/20 18:40", action: "in" },
     ],
   },
 ];
 // Current user's info, copied straight from userBase
 let userInfo = undefined;
 
-// DOM elements variables
+// DOM variables
 let loginDiv = document.getElementById("login");
 let nameInput = document.getElementById("username");
-let passInput = document.getElementById("password");
-let errorText = document.getElementById("error-text");
+let deniedText = document.getElementById("denied-text");
 
 let mainDiv = document.getElementById("main");
+let grantedText = document.getElementById("granted-text");
 let nameText = document.getElementById("name-text");
 let hoursText = document.getElementById("hours-text");
 let checkedText = document.getElementById("checked-text");
 let timeText = document.getElementById("time-text");
-let checkToggle = document.getElementById("toggle-check");
+let toggleCheckText = document.getElementById("toggle-check-text");
 let historyList = document.getElementById("history-list");
+
+// Load info from user base if they've already logged in
+if (localStorage.getItem("user")) {
+  userInfo = userBase.find(user => user.name == localStorage.getItem("user"));
+  setupUI();
+}
+
+// Arranges and fills in UI elements
+function setupUI() {
+  loginDiv.style.display = "none";
+  mainDiv.style.display = "block";
+  nameText.innerHTML = userInfo.name;
+  hoursText.innerHTML = userInfo.totalHours;
+  checkedText.innerHTML = userInfo.history[0].action;
+  timeText.innerHTML = userInfo.sinceAction;
+  toggleCheckText.innerHTML = checkedText.innerHTML == "in" ? "out" : "in";
+  historyList.innerHTML = "";
+  userInfo.history.forEach(elm => {
+    historyList.innerHTML += `<li>${elm.time} - checked ${elm.action}</li>`;
+  });
+  nameInput.value = "";
+}
 
 // Self-explanatory
 function login() {
   if (!nameInput.value) return;
   userBase.forEach(user => {
-    if (user.name.toLowerCase() == nameInput.value.toLowerCase() && user.pass == passInput.value) {
-      loginDiv.style.display = "none";
-      mainDiv.style.display = "block";
+    if (user.name == nameInput.value) {
       userInfo = JSON.parse(JSON.stringify(user));
-      fillInfo();
-      nameInput.value = "";
-      passInput.value = "";
-      errorText.style.display = "none";
+      setupUI();
+      grantedText.style.display = "block";
+      localStorage.setItem("user", user.name);
       return;
     }
   });
   if (!userInfo) {
-    errorText.style.display = "block";
+    deniedText.style.display = "block";
   }
-}
-
-// Fills DOM elements with stuff
-function fillInfo() {
-  nameText.innerHTML = userInfo.name;
-  hoursText.innerHTML = userInfo.totalHours;
-  checkedText.innerHTML = userInfo.history[0].action;
-  timeText.innerHTML = userInfo.sinceAction;
-  checkToggle.innerHTML = checkedText.innerHTML == "checked in" ? "Check out" : "Check in";
-  historyList.innerHTML = "";
-  userInfo.history.forEach(elm => {
-    historyList.innerHTML += `<li>${elm.time} - ${elm.action}</li>`;
-  });
 }
 
 // Reset everything
@@ -69,8 +74,11 @@ function logout() {
   hoursText.innerHTML = "";
   checkedText.innerHTML = "";
   timeText.innerHTML = "";
-  checkToggle.innerHTML = "";
+  toggleCheckText.innerHTML = "";
   historyList.innerHTML = "";
-  loginDiv.style.display = "block";
-  mainDiv.style.display = "none";
+  loginDiv.style.removeProperty("display");
+  mainDiv.style.removeProperty("display");
+  grantedText.style.removeProperty("display");
+  deniedText.style.removeProperty("display");
+  localStorage.removeItem("user");
 }

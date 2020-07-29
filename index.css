@@ -4,14 +4,8 @@
 body {
   margin: 8px;
 }
-
 #main,
-#error-text {
-  display: none;
-}
-
-::-webkit-outer-spin-button,
-::-webkit-inner-spin-button,
-::-webkit-calendar-picker-indicator {
+#granted-text,
+#denied-text {
   display: none;
 }
