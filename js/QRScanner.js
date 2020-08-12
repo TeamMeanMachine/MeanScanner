@@ -12,9 +12,12 @@ class QRScanner {
     this.draw = {};
     this.draw.lineWidth = opts.draw.lineWidth || 2;
     this.draw.strokeStyle = opts.draw.strokeStyle || 'red';
+
+    this.currentlyScanning = false;
   }
 
   async scan() {
+    this.currentlyScanning = true;
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment' }, // Make sure that the phone is facing away
     });
@@ -37,6 +40,7 @@ class QRScanner {
 
   step() {
     if (this.video.readyState === this.video.HAVE_ENOUGH_DATA) {
+      if (!this.currentlyScanning) return;
       this.canvas.height = this.video.videoHeight;
       this.canvas.width = this.video.videoWidth;
       this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
@@ -78,6 +82,19 @@ class QRScanner {
 
     // Keep calling step
     requestAnimationFrame(this.step.bind(this));
+  }
+
+  clear() {
+    this.currentlyScanning = false;
+    this.video.pause();
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  destroy() {
+    this.clear();
+    this.video.remove();
+    this.canvas.remove();
+    this.ctx = undefined;
   }
 
   drawLine(begin, end) {
