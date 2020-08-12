@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>QR Parser | MeanScanner</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="/css/norm.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+  <body>
+    <h1>MeanScanner QR Scanner Demo</h1>
+    <canvas id="canvas"></canvas>
+    <div id="output"></div>
+
+    <script src="/js/jsQR.js"></script>
+    <script src="/js/QRScanner.js"></script>
+    <script defer>
+      const qr = new QRScanner({
+        canvas: '#canvas',
+        output: '#output',
+        draw: {
+          lineWidth: 2,
+          strokeStyle: 'red',
+        },
+      });
+
+      qr.init();
+    </script>
+  </body>
+</html>

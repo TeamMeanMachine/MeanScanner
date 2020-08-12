@@ -4,8 +4,8 @@
     <title>MeanScanner</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="norm.css">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="/css/norm.css">
+    <link rel="stylesheet" href="/css/index.css">
     <script async defer src="https://apis.google.com/js/api.js"
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
@@ -124,6 +124,7 @@
   </head>
   <body>
     <h1>MeanScanner</h1>
+    <a href="/qrgenerator.html">QRGenerator</a> | <a href="/qrscanner.html">QRScanner</a>
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
     <pre id="content" style="white-space: pre-wrap;"></pre>
@@ -147,6 +148,6 @@
       <p>History</p>
       <ul id="history-list"></ul>
     </div>
-    <script src="./index.js"></script>
+    <script src="/js/index.js"></script>
   </body>
 </html>

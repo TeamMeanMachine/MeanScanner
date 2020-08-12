@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>QR Generator | MeanScanner</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="/css/norm.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+  <body>
+    <h1>MeanScanner QR Generator Demo</h1>
+
+    <form id="generate">
+      <input type="text" id="id" required>
+      <button type="submit">Generate</button>
+    </form>
+  
+    <canvas id="canvas"></canvas>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script defer>
+      document.querySelector('#generate').onsubmit = () => {
+        const qr = new QRious({
+          element: document.querySelector('#canvas'),
+          value: document.querySelector('#id').value.toUpperCase()
+        });
+        return false;
+      }
+    </script>
+  </body>
+</html>
