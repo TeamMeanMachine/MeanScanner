@@ -13,18 +13,22 @@
     <div id="output"></div>
 
     <script src="/js/jsQR.js"></script>
+    <!-- custom wrapper for jsQR -->
     <script src="/js/QRScanner.js"></script>
     <script defer>
-      const qr = new QRScanner({
-        canvas: '#canvas',
-        output: '#output',
-        draw: {
-          lineWidth: 2,
-          strokeStyle: 'red',
-        },
-      });
+      (async () => {
+        const qr = new QRScanner({
+          canvas: '#canvas', // Query refs for elems
+          draw: {
+            // Canvas draw settings
+            lineWidth: 2,
+            strokeStyle: 'red',
+          },
+        });
 
-      qr.init();
+        await qr.init();
+        document.querySelector('#output').innerText = (await qr.data()).name;
+      })();
     </script>
   </body>
 </html>
