@@ -9,28 +9,36 @@
   </head>
   <body>
     <h1>MeanScanner QR Scanner Demo</h1>
+    <button id="scan">Scan</button> <button id="clear">Clear</button> <button id="destroy">Destroy</button>
+    <h1 id="output" style="color: red;"></h1><br>
     <canvas id="canvas"></canvas>
-    <div id="output"></div>
 
     <script src="/js/jsQR.js"></script>
     <!-- custom wrapper for jsQR -->
     <script src="/js/QRScanner.js"></script>
     <script defer>
-      (async () => {
-        const qr = new QRScanner({
-          canvas: '#canvas', // Query refs for elems
-          draw: {
-            // Canvas draw settings
-            lineWidth: 2,
-            strokeStyle: 'red',
-          },
-        });
+      const qr = new QRScanner({
+        canvas: '#canvas', // Query refs for elems
+        draw: {
+          // Canvas draw settings
+          lineWidth: 2,
+          strokeStyle: 'red',
+        },
+      });
 
+      document.querySelector('#scan').addEventListener('click', async () => {
         const data = await qr.scan();
         document.querySelector('#output').innerText = data.name;
+      });
 
-        // stop by calling qr.clear() or qr.destroy()
-      })();
+      document.querySelector('#clear').addEventListener('click', () => {
+        qr.clear();
+      });
+
+      document.querySelector('#destroy').addEventListener('click', () => {
+        if (!confirm('This action is irreversible! Are you sure you want to continue')) return;
+        qr.destroy();
+      });  
     </script>
   </body>
 </html>
