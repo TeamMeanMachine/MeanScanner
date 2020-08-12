@@ -25,6 +25,9 @@
             strokeStyle: 'red',
           },
         });
+
+        const data = await qr.scan();
+        document.querySelector('#output').innerText = data.name;
       })();
     </script>
   </body>
