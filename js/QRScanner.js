@@ -51,12 +51,7 @@ class QRScanner {
       });
 
       if (qr) {
-        const {
-          topLeftCorner,
-          topRightCorner,
-          bottomRightCorner,
-          bottomLeftCorner,
-        } = qr.location;
+        const { topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner } = qr.location;
 
         this.drawLine(topLeftCorner, topRightCorner);
         this.drawLine(topRightCorner, bottomRightCorner);
@@ -88,6 +83,9 @@ class QRScanner {
     this.currentlyScanning = false;
     this.video.pause();
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.video.srcObject.getTracks().forEach((track) => {
+      track.stop();
+    });
   }
 
   destroy() {
