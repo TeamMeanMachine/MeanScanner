@@ -11,10 +11,10 @@ class QRScanner {
 
     this.draw = {};
     this.draw.lineWidth = opts.draw.lineWidth || 2;
-    this.draw.strokeStyle = opts.draw.strokeStyle || '#D62027';
+    this.draw.strokeStyle = opts.draw.strokeStyle || 'red';
   }
 
-  async start() {
+  async scan() {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment' }, // Make sure that the phone is facing away
     });
@@ -23,6 +23,16 @@ class QRScanner {
     this.video.setAttribute('playsinline', true);
     this.video.play();
     requestAnimationFrame(this.step.bind(this)); // Need to bind this due to requestAnimationFrame
+
+    return new Promise((res) => {
+      this.canvas.addEventListener('qrscan', ({ detail }) => {
+        res({
+          name: detail.name,
+          first: detail.first,
+          last: detail.last,
+        });
+      });
+    });
   }
 
   step() {
@@ -68,19 +78,6 @@ class QRScanner {
 
     // Keep calling step
     requestAnimationFrame(this.step.bind(this));
-  }
-
-  data() {
-    // Resolve when CustomEvent is thrown back
-    return new Promise((res) => {
-      this.canvas.addEventListener('qrscan', ({ detail }) => {
-        res({
-          name: detail.name,
-          first: detail.first,
-          last: detail.last,
-        });
-      });
-    });
   }
 
   drawLine(begin, end) {
