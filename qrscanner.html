@@ -16,16 +16,21 @@
     <!-- custom wrapper for jsQR -->
     <script src="/js/QRScanner.js"></script>
     <script defer>
-      const qr = new QRScanner({
-        canvas: '#canvas', // Query refs for elems
-        draw: {
-          // Canvas draw settings
-          lineWidth: 2,
-          strokeStyle: 'red',
-        },
-      });
+      (async () => {
+        const qr = new QRScanner({
+          canvas: '#canvas', // Query refs for elems
+          draw: {
+            // Canvas draw settings
+            lineWidth: 2,
+            strokeStyle: 'red',
+          },
+        });
 
-      qr.scan();
+        const data = await qr.scan();
+        document.querySelector('#output').innerText = data.name;
+
+        // stop by calling qr.clear() or qr.destroy()
+      })();
     </script>
   </body>
 </html>
