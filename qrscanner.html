@@ -26,7 +26,7 @@
           },
         });
 
-        await qr.init();
+        await qr.start();
         document.querySelector('#output').innerText = (await qr.data()).name;
       })();
     </script>

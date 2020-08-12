@@ -1,5 +1,7 @@
 // Peer dependency: jsqr.js
 
+// Make sure this is loaded AFTER the jsqr import but BEFORE your intialization code to make sure this works
+
 class QRScanner {
   constructor(opts = {}) {
     // Initialize instance vars
@@ -12,7 +14,7 @@ class QRScanner {
     this.draw.strokeStyle = opts.draw.strokeStyle || '#D62027';
   }
 
-  async init() {
+  async start() {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment' }, // Make sure that the phone is facing away
     });
@@ -20,37 +22,34 @@ class QRScanner {
     this.video.srcObject = stream;
     this.video.setAttribute('playsinline', true);
     this.video.play();
-    requestAnimationFrame(this.tick.bind(this)); // Need to bind this due to requestAnimationFrame
+    requestAnimationFrame(this.step.bind(this)); // Need to bind this due to requestAnimationFrame
   }
 
-  tick() {
+  step() {
     if (this.video.readyState === this.video.HAVE_ENOUGH_DATA) {
       this.canvas.height = this.video.videoHeight;
       this.canvas.width = this.video.videoWidth;
       this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
 
       const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+      const qr = jsQR(imageData.data, imageData.width, imageData.height, {
         inversionAttempts: 'dontInvert',
       });
 
-      if (code) {
+      if (qr) {
         const {
           topLeftCorner,
           topRightCorner,
           bottomRightCorner,
           bottomLeftCorner,
-        } = code.location;
+        } = qr.location;
 
         this.drawLine(topLeftCorner, topRightCorner);
         this.drawLine(topRightCorner, bottomRightCorner);
         this.drawLine(bottomRightCorner, bottomLeftCorner);
         this.drawLine(bottomLeftCorner, topLeftCorner);
 
-        // Stop when done
-        this.video.pause();
-
-        const nameParts = this.parseName(code.data);
+        const nameParts = this.parseName(qr.data);
         const event = new CustomEvent('qrscan', {
           bubbles: true,
           detail: {
@@ -60,12 +59,15 @@ class QRScanner {
           },
         });
         this.canvas.dispatchEvent(event);
+
+        // Stop when detected
+        this.video.pause();
         return;
       }
     }
 
-    // Keep calling tick
-    requestAnimationFrame(this.tick.bind(this));
+    // Keep calling step
+    requestAnimationFrame(this.step.bind(this));
   }
 
   data() {
@@ -97,3 +99,5 @@ class QRScanner {
     return parts.slice(0, 2);
   }
 }
+
+window.qrscan = QRScanner; // Bind to window
