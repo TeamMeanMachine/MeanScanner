@@ -15,7 +15,7 @@
     />
     <link rel="stylesheet" href="/css/index.css" />
 
-    <link rel="icon" type="image/png" href="/img/logo.png">
+    <link rel="icon" type="image/png" href="/img/logo.png" />
 
     <title>MeanScanner</title>
   </head>
@@ -23,67 +23,136 @@
     <div class="container">
       <div class="row">
         <div class="pt-5">
-          <h1 class="align-middle"><img id="logo" src="./img/logo.svg" width="50px" alt=""> MeanScanner</h1>
+          <h1 class="align-middle">
+            <img id="logo" src="./img/logo.svg" width="50px" alt="" /> MeanScanner
+          </h1>
           <p>An app prototype for the hour-tracking project.</p>
-          <button id="authorize_button" class="btn btn-danger">
-            <i class="fas fa-user"></i> Authorize
-          </button>
-          <button id="signout_button" class="btn btn-secondary">
-            <i class="fas fa-user"></i> Deauthorize
-          </button>
-          <br /><br />
-          <canvas id="canvas" hidden></canvas>
-
-          <div id="login">
-            <p>Who are you? Log in with:</p>
-            <p>
-              <button onclick="scan()" class="btn btn-danger">
-                <i class="fas fa-qrcode"></i> QR Code
+          <ul class="nav nav-pills mb-3 w-100 nav-justified" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link active"
+                id="pills-oauth-tab"
+                data-toggle="pill"
+                href="#pills-oauth"
+                role="tab"
+                aria-controls="pills-oauth"
+                aria-selected="true"
+                ><i class="fas fa-user"></i> OAuth</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="pills-qr-tab"
+                data-toggle="pill"
+                href="#pills-qr"
+                role="tab"
+                aria-controls="pills-qr"
+                aria-selected="false"
+                ><i class="fas fa-qrcode"></i> QR</a
+              >
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="pills-sheet-tab"
+                data-toggle="pill"
+                href="#pills-sheet"
+                role="tab"
+                aria-controls="pills-sheet"
+                aria-selected="false"
+                ><i class="fas fa-file-spreadsheet"></i> Sheet</a
+              >
+            </li>
+          </ul>
+          <hr>
+          <div class="tab-content" id="pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="pills-oauth"
+              role="tabpanel"
+              aria-labelledby="pills-oauth-tab"
+            >
+              <button id="authorize_button" class="btn btn-danger">
+                <i class="fas fa-user"></i> Authorize
               </button>
-              <!-- <p>- or -</p> -->
+              <button id="signout_button" class="btn btn-secondary">
+                <i class="fas fa-user"></i> Deauthorize
+              </button>
+            </div>
 
-              <!-- <p><button onclick="login()" class="btn btn-danger">Log in</button></p> -->
+            <div class="tab-pane fade" id="pills-qr" role="tabpanel" aria-labelledby="pills-qr-tab">
+              <canvas id="canvas" hidden></canvas>
+
+              <div id="login">
+                <p>Who are you? Log in with:</p>
+                <p>
+                  <button onclick="scan()" class="btn btn-danger" id="scan">
+                    <i class="fas fa-qrcode"></i> QR Code
+                  </button>
+                  <!-- <p>- or -</p> -->
+
+                  <!-- <p><button onclick="login()" class="btn btn-danger">Log in</button></p> -->
+                </p>
+                <input id="username" hidden />
+                <p id="denied-text">
+                  <!-- - ACCESS DENIED - -->
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="tab-pane fade"
+              id="pills-sheet"
+              role="tabpanel"
+              aria-labelledby="pills-sheet-tab"
+            >
               <button onclick="readSheet()" class="btn btn-secondary">
-                <i class="fas fa-file-spreadsheet"></i> Read sheet
-              </button>
-            </p>
-            <input id="username" hidden />
-            <p id="denied-text">
-              <!-- - ACCESS DENIED - -->
-            </p>
-          </div>
-
-          <table class="table table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Member</th>
-                <th scope="col">Indicator</th>
-              </tr>
-            </thead>
-            <tbody id="content"></tbody>
-          </table>
-          <div id="main">
-            <p id="granted-text">- ACCESS GRANTED -</p>
-            <p>Welcome, <span id="name-text"></span>!</p>
-            <p><button onclick="logout()">Log out</button></p>
-            <p><span id="hours-text"></span> hours total</p>
-            <p>
-              You have been checked <span id="checked-text"></span> for
-              <span id="time-text"></span> min
-            </p>
-            <p>
-              <button id="toggle-check" disabled>
-                Check <span id="toggle-check-text"></span> (coming soon&trade;)
-              </button>
-            </p>
-            <p>History</p>
-            <ul id="history-list"></ul>
+                <i class="fas fa-file-spreadsheet"></i> Read sheet</button
+              ><br />
+              <table class="table table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Member</th>
+                    <th scope="col">Indicator</th>
+                  </tr>
+                </thead>
+                <tbody id="content"></tbody>
+              </table>
+              <div id="main">
+                <p id="granted-text">- ACCESS GRANTED -</p>
+                <p>Welcome, <span id="name-text"></span>!</p>
+                <p><button onclick="logout()">Log out</button></p>
+                <p><span id="hours-text"></span> hours total</p>
+                <p>
+                  You have been checked <span id="checked-text"></span> for
+                  <span id="time-text"></span> min
+                </p>
+                <p>
+                  <button id="toggle-check" disabled>
+                    Check <span id="toggle-check-text"></span> (coming soon&trade;)
+                  </button>
+                </p>
+                <p>History</p>
+                <ul id="history-list"></ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+      crossorigin="anonymous"
+    ></script>
     <script src="/js/auth.js"></script>
     <script src="/js/jsQR.js"></script>
     <script src="/js/QRScanner.js"></script>

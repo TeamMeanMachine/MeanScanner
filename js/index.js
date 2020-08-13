@@ -89,10 +89,14 @@ const qr = new QRScanner({
 
 async function scan() {
   try {
+    document.querySelector('#scan').innerHTML =
+      '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Scanning...';
     const data = await qr.scan();
     document.querySelector('#username').value = data.name;
     qr.stop();
     login();
+    document.querySelector('#scan').innerHTML = '<i class="fas fa-qrcode"></i> QR Code';
+    document.querySelector('#pills-sheet-tab').click();
   } catch (err) {
     alert(err);
   }
