@@ -4,7 +4,6 @@
 
 class QRScanner {
   constructor(opts = {}) {
-    // Initialize instance vars
     this.video = document.createElement('video');
     this.canvas = document.querySelector(opts.canvas) || '#canvas';
     this.ctx = this.canvas.getContext('2d');
@@ -40,13 +39,17 @@ class QRScanner {
     });
   }
 
-  clear() {
+  stop() {
     this.currentlyScanning = false;
     this.video.pause();
-    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.video.srcObject.getTracks().forEach((track) => {
       track.stop();
     });
+  }
+
+  hide() {
+    this.stop();
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
   destroy() {
@@ -88,7 +91,6 @@ class QRScanner {
           this._drawLine(bottomRightCorner, bottomLeftCorner, this.draw.successStrokeStyle);
           this._drawLine(bottomLeftCorner, topLeftCorner, this.draw.successStrokeStyle);
 
-          // Stop when detected
           this.video.pause();
           return;
         } catch (err) {
@@ -99,12 +101,10 @@ class QRScanner {
       }
     }
 
-    // Keep calling step
     requestAnimationFrame(this._step.bind(this));
   }
 
   _drawLine(begin, end, color) {
-    // Plug and play canvas draw sequence
     this.ctx.beginPath();
     this.ctx.moveTo(begin.x, begin.y);
     this.ctx.lineTo(end.x, end.y);
@@ -114,7 +114,6 @@ class QRScanner {
   }
 
   _parseName(data) {
-    // Grabs the first 2 elems after split to get FIRST LAST_INITIAL (ex. Aiden B)
     const parts = data.split(' ').slice(0, 2);
     return this._validateName(parts);
   }
@@ -141,4 +140,4 @@ class QRScanner {
   }
 }
 
-window.qrscan = QRScanner; // Bind to window
+window.qrscan = QRScanner; 
