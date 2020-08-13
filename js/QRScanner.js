@@ -92,6 +92,7 @@ class QRScanner {
           this.video.pause();
           return;
         } catch (err) {
+          console.error(err);
           this._drawLine(topLeftCorner, bottomRightCorner, this.draw.failStrokeStyle);
           this._drawLine(topRightCorner, bottomLeftCorner, this.draw.failStrokeStyle);
         }
@@ -120,6 +121,9 @@ class QRScanner {
   }
 
   _validateName(parts) {
+    if (!parts[0].startsWith('​')) {
+      throw new Error('Validation prefix not found');
+    }
     if (parts.length !== 2) {
       throw new Error('Parts length is not 2');
     }
