@@ -10,8 +10,10 @@ class QRScanner {
     this.ctx = this.canvas.getContext('2d');
 
     this.draw = {};
-    this.draw.lineWidth = opts.draw.lineWidth || 2;
-    this.draw.strokeStyle = opts.draw.strokeStyle || 'red';
+    opts.draw = opts.draw || {};
+    this.draw.lineWidth = opts.draw.lineWidth || 4;
+    this.draw.successStrokeStyle = opts.draw.successStrokeStyle || '#52C41A';
+    this.draw.failStrokeStyle = opts.draw.failStrokeStyle || '#F5222D';
 
     this.currentlyScanning = false;
   }
@@ -69,25 +71,30 @@ class QRScanner {
       if (qr) {
         const { topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner } = qr.location;
 
-        this._drawLine(topLeftCorner, topRightCorner);
-        this._drawLine(topRightCorner, bottomRightCorner);
-        this._drawLine(bottomRightCorner, bottomLeftCorner);
-        this._drawLine(bottomLeftCorner, topLeftCorner);
+        try {
+          const nameParts = this._parseName(qr.data);
+          const event = new CustomEvent('qrscan', {
+            bubbles: true,
+            detail: {
+              name: nameParts.join(' '),
+              first: nameParts[0],
+              last: nameParts[1],
+            },
+          });
+          this.canvas.dispatchEvent(event);
 
-        const nameParts = this._parseName(qr.data);
-        const event = new CustomEvent('qrscan', {
-          bubbles: true,
-          detail: {
-            name: nameParts.join(' '),
-            first: nameParts[0],
-            last: nameParts[1],
-          },
-        });
-        this.canvas.dispatchEvent(event);
+          this._drawLine(topLeftCorner, topRightCorner, this.draw.successStrokeStyle);
+          this._drawLine(topRightCorner, bottomRightCorner, this.draw.successStrokeStyle);
+          this._drawLine(bottomRightCorner, bottomLeftCorner, this.draw.successStrokeStyle);
+          this._drawLine(bottomLeftCorner, topLeftCorner, this.draw.successStrokeStyle);
 
-        // Stop when detected
-        this.video.pause();
-        return;
+          // Stop when detected
+          this.video.pause();
+          return;
+        } catch (err) {
+          this._drawLine(topLeftCorner, bottomRightCorner, this.draw.failStrokeStyle);
+          this._drawLine(topRightCorner, bottomLeftCorner, this.draw.failStrokeStyle);
+        }
       }
     }
 
@@ -95,20 +102,36 @@ class QRScanner {
     requestAnimationFrame(this._step.bind(this));
   }
 
-  _drawLine(begin, end) {
+  _drawLine(begin, end, color) {
     // Plug and play canvas draw sequence
     this.ctx.beginPath();
     this.ctx.moveTo(begin.x, begin.y);
     this.ctx.lineTo(end.x, end.y);
     this.ctx.lineWidth = this.draw.lineWidth;
-    this.ctx.strokeStyle = this.draw.strokeStyle;
+    this.ctx.strokeStyle = color;
     this.ctx.stroke();
   }
 
   _parseName(data) {
     // Grabs the first 2 elems after split to get FIRST LAST_INITIAL (ex. Aiden B)
-    const parts = data.split(' ');
-    return parts.slice(0, 2);
+    const parts = data.split(' ').slice(0, 2);
+    this._validateName(parts);
+    return parts;
+  }
+
+  _validateName(parts) {
+    if (parts.length !== 2) {
+      requestAnimationFrame(this._step.bind(this));
+      throw new Error('Parts length is not 2');
+    }
+    if (typeof parts[0] !== 'string' || typeof parts[1] !== 'string') {
+      requestAnimationFrame(this._step.bind(this));
+      throw new Error('Parts type is not string');
+    }
+    if (!/^[a-zA-Z]+$/.test(parts[0]) || !/^[a-zA-Z]+$/.test(parts[1])) {
+      requestAnimationFrame(this._step.bind(this));
+      throw new Error('Parts contain characters that are not letters');
+    }
   }
 }
 

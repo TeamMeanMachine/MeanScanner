@@ -85,13 +85,13 @@ function logout() {
 
 const qr = new QRScanner({
   canvas: '#canvas',
-  draw: {
-    lineWidth: 2,
-    strokeStyle: 'red',
-  },
 });
 
 async function scan() {
-  const data = await qr.scan();
-  document.querySelector('#username').value = data.name;
+  try {
+    const data = await qr.scan();
+    document.querySelector('#username').value = data.name;
+  } catch(err) {
+    alert(err);
+  }
 }
