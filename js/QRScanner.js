@@ -1,9 +1,10 @@
-// Peer dependency: jsqr.js
-
-// Make sure this is loaded AFTER the jsqr import but BEFORE your intialization code to make sure this works
+/*
+ * MeanScanner QRScanner Module (Requires jsQR)
+ */
 
 class QRScanner {
   constructor(opts = {}) {
+    this.prefix = opts.prefix || 'TMM';
     this.video = document.createElement('video');
     this.canvas = document.querySelector(opts.canvas) || '#canvas';
     this.ctx = this.canvas.getContext('2d');
@@ -11,13 +12,14 @@ class QRScanner {
     this.draw = {};
     opts.draw = opts.draw || {};
     this.draw.lineWidth = opts.draw.lineWidth || 4;
-    this.draw.successStrokeStyle = opts.draw.successStrokeStyle || '#52C41A';
-    this.draw.failStrokeStyle = opts.draw.failStrokeStyle || '#F5222D';
+    this.draw.successStrokeStyle = opts.draw.successStrokeStyle || '#DC3545';
+    this.draw.failStrokeStyle = opts.draw.failStrokeStyle || '#DC3545';
 
     this.currentlyScanning = false;
   }
 
   async scan() {
+    this.canvas.hidden = false;
     this.currentlyScanning = true;
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment' }, // Make sure that the phone is facing away
@@ -39,6 +41,14 @@ class QRScanner {
     });
   }
 
+  show() {
+    this.canvas.hidden = false;
+  }
+
+  hide() {
+    this.canvas.hidden = true;
+  }
+
   stop() {
     this.currentlyScanning = false;
     this.video.pause();
@@ -47,13 +57,9 @@ class QRScanner {
     });
   }
 
-  hide() {
-    this.stop();
-    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
   destroy() {
-    this.clear();
+    this.stop();
+    this.hide();
     this.video.remove();
     this.canvas.remove();
     this.ctx = undefined;
@@ -91,7 +97,7 @@ class QRScanner {
           this._drawLine(bottomRightCorner, bottomLeftCorner, this.draw.successStrokeStyle);
           this._drawLine(bottomLeftCorner, topLeftCorner, this.draw.successStrokeStyle);
 
-          this.video.pause();
+          this.stop();
           return;
         } catch (err) {
           this._drawLine(topLeftCorner, bottomRightCorner, this.draw.failStrokeStyle);
@@ -122,10 +128,10 @@ class QRScanner {
     if (parts.length !== 2) {
       throw new Error('Parts length is not 2');
     }
-    if (!parts[0].startsWith('TMM')) {
+    if (!parts[0].startsWith(this.prefix)) {
       throw new Error('Validation prefix not found');
     }
-    parts[0] = parts[0].replace('TMM', '');
+    parts[0] = parts[0].replace(this.prefix, '');
     if (typeof parts[0] !== 'string' || typeof parts[1] !== 'string') {
       throw new Error('Parts type is not string');
     }
@@ -136,8 +142,8 @@ class QRScanner {
   }
 
   _wait(ms) {
-    return new Promise(res => setTimeout(res, ms));
+    return new Promise((res) => setTimeout(res, ms));
   }
 }
 
-window.qrscan = QRScanner; 
+window.qrscan = QRScanner;

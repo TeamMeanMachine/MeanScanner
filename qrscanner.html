@@ -13,6 +13,8 @@
     <h1>MeanScanner QR Scanner Demo</h1>
     <button class="btn btn-primary" id="scan"> <i class="fas fa-qrcode"></i> Scan</button>
     <button class="btn btn-warning" id="hide">Hide</button>
+    <button class="btn btn-warning" id="show">Show</button>
+    <button class="btn btn-danger" id="stop">Stop</button>
     <button class="btn btn-danger" id="destroy">Destroy</button>
     <h1 id="output" style="color: red;"></h1><br>
     <canvas id="canvas"></canvas>
@@ -39,6 +41,14 @@
 
       document.querySelector('#hide').addEventListener('click', () => {
         qr.hide();
+      });
+
+      document.querySelector('#show').addEventListener('click', () => {
+        qr.show();
+      });
+
+      document.querySelector('#stop').addEventListener('click', () => {
+        qr.stop();
       });
 
       document.querySelector('#destroy').addEventListener('click', () => {

@@ -1,157 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://kit-pro.fontawesome.com/releases/v5.11.2/css/pro.min.css"
+    />
+    <link rel="stylesheet" href="/css/index.css" />
+
     <title>MeanScanner</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="/css/norm.css">
-    <link rel="stylesheet" href="/css/index.css">
-    <script async defer src="https://apis.google.com/js/api.js"
-      onload="this.onload=function(){};handleClientLoad()"
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
-
-    <script>
-      const SPREADSHEET_ID = '1GEkN-CR8aFFLnDy-ZKuhokI3azK-ygSEJp4Q6y2E2pg';
-      const CLIENT_ID = '938209231565-tlsrper5vjdaboo8qghjfu3tpgqqbajk.apps.googleusercontent.com';
-      const API_KEY = 'AIzaSyDKscGpqmGmB8DlAPJuA0jGGOfB9tA4FKg';
-      const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
-      var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-      var authorizeButton;
-      var signoutButton;
-      var pre;
-
-      function readSheet() {
-        pre.innerHTML = nameInput.value;
-        console.log("I hit a button. Hi.");
-        list();
-      }
-
-      function handleClientLoad() { //initialize the Google API
-        authorizeButton = document.getElementById('authorize_button');
-        signoutButton = document.getElementById('signout_button');
-        pre = document.getElementById('content');
-        gapi.load('client:auth2', this.initClient);
-      }
-
-      function initClient() {
-        gapi.client.init({
-          apiKey: API_KEY,
-          clientId: CLIENT_ID,
-          discoveryDocs: DISCOVERY_DOCS,
-          scope: SCOPES
-        }).then(function () {
-          // Listen for sign-in state changes.
-          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-          // Handle the initial sign-in state.
-          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-          authorizeButton.onclick = handleAuthClick;
-          signoutButton.onclick = handleSignoutClick;
-        }, function(error) {
-          appendPre(JSON.stringify(error, null, 2));
-        });
-      }
-
-      function updateSigninStatus(isSignedIn) {
-        if (isSignedIn) {
-          authorizeButton.style.display = 'none';
-          signoutButton.style.display = 'block';
-          nameInput.value = "Ayla C"; //just for testing
-        } else {
-          authorizeButton.style.display = 'block';
-          signoutButton.style.display = 'none';
-        }
-      }
-
-      /**
-       *  Sign in the user upon button click.
-       */
-      function handleAuthClick(event) {
-        gapi.auth2.getAuthInstance().signIn();
-      }
-
-      /**
-       *  Sign out the user upon button click.
-       */
-      function handleSignoutClick(event) {
-        gapi.auth2.getAuthInstance().signOut();
-      }
-
-      function appendPre(message) {
-        var textContent = document.createTextNode(message + '\n');
-        pre.appendChild(textContent);
-      }
-
-      function list() {
-        gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: SPREADSHEET_ID,
-          range: 'FormResponses!A2:B',
-        }).then(function(response) {
-          var range = response.result;
-          if (range.values.length > 0) {
-            appendPre('Timestamp, Name:');
-            var thisDay = new Date();
-            thisDay.setHours(0,0,0,0);
-            
-            for (i = 0; i < range.values.length; i++) {
-              var row = range.values[i];
-              
-
-              // Print columns A and B, which correspond to indices 0 and 1.
-              if(row[1] == nameInput.value ) {
-                var activeDate = new Date(Date.parse(row[0]));
-                activeDate.setHours(0,0,0,0);
-                appendPre(row[0] + ', ' + row[1]);
-                if(equalDates(thisDay, activeDate)) {
-                  appendPre("TODAY");
-                }
-              }
-            }
-          } else {
-            appendPre('No data found.');
-          }
-        }, function(response) {
-          appendPre('Error: ' + response.result.error.message);
-        });
-      }
-
-      function equalDates(date1, date2) {
-        return date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getFullYear() == date2.getFullYear();
-      }
-
-    </script>
   </head>
   <body>
-    <h1>MeanScanner</h1>
-    <a href="/qrgenerator.html">QRGenerator</a> | <a href="/qrscanner.html">QRScanner</a>
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
-    <canvas id="canvas"></canvas>
+    <div class="container">
+      <div class="row">
+        <div class="col-6 pt-5">
+          <h1><i class="fas fa-clock"></i> MeanScanner</h1>
+          <p>An app prototype for the hour-tracking project.</p>
+          <button id="authorize_button" class="btn btn-danger">
+            <i class="fas fa-user"></i> Authorize
+          </button>
+          <button id="signout_button" class="btn btn-secondary">
+            <i class="fas fa-user"></i> Deauthorize
+          </button>
+          <br /><br />
+          <canvas id="canvas" hidden></canvas>
 
-    <pre id="content" style="white-space: pre-wrap;"></pre>
+          <div id="login">
+            <p>Who are you? Log in with:</p>
+            <p>
+              <button onclick="scan()" class="btn btn-danger">
+                <i class="fas fa-qrcode"></i> QR Code
+              </button>
+              <!-- <p>- or -</p> -->
 
-    <div id="login">
-      <p>Who are you? Log in with:</p>
-      <p><button onclick="scan()">QR Code</button></p>
-      <p>- or -</p>
-      <p><label>Username<br><input id="username"></label></p>
-      <p><button onclick="login()">Log in</button></p>
-      <p><button onclick="readSheet()">Read sheet</button></p>
-      <p id="denied-text">- ACCESS DENIED -</p>
+              <!-- <p><button onclick="login()" class="btn btn-danger">Log in</button></p> -->
+              <button onclick="readSheet()" class="btn btn-secondary">
+                <i class="fas fa-file-spreadsheet"></i> Read sheet
+              </button>
+            </p>
+            <input id="username" hidden />
+            <p id="denied-text">
+              <!-- - ACCESS DENIED - -->
+            </p>
+          </div>
+
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Member</th>
+                <th scope="col">Indicator</th>
+              </tr>
+            </thead>
+            <tbody id="content"></tbody>
+          </table>
+          <div id="main">
+            <p id="granted-text">- ACCESS GRANTED -</p>
+            <p>Welcome, <span id="name-text"></span>!</p>
+            <p><button onclick="logout()">Log out</button></p>
+            <p><span id="hours-text"></span> hours total</p>
+            <p>
+              You have been checked <span id="checked-text"></span> for
+              <span id="time-text"></span> min
+            </p>
+            <p>
+              <button id="toggle-check" disabled>
+                Check <span id="toggle-check-text"></span> (coming soon&trade;)
+              </button>
+            </p>
+            <p>History</p>
+            <ul id="history-list"></ul>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="main">
-      <p id="granted-text">- ACCESS GRANTED -</p>
-      <p>Welcome, <span id="name-text"></span>!</p>
-      <p><button onclick="logout()">Log out</button></p>
-      <p><span id="hours-text"></span> hours total</p>
-      <p>You have been checked <span id="checked-text"></span> for <span id="time-text"></span> min</p>
-      <p><button id="toggle-check" disabled>Check <span id="toggle-check-text"></span> (coming soon&trade;)</button></p>
-      <p>History</p>
-      <ul id="history-list"></ul>
-    </div>
+
+    <script src="/js/auth.js"></script>
     <script src="/js/jsQR.js"></script>
     <script src="/js/QRScanner.js"></script>
     <script src="/js/index.js"></script>
+    <script
+      async
+      defer
+      src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()"
+    ></script>
   </body>
 </html>

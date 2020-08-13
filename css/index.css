@@ -1,9 +1,12 @@
-* {
-  font-family: sans-serif;
-}
 body {
-  margin: 8px;
+  background: #000;
+  color: #fff;
 }
+
+.fa-clock {
+  color: #DC3545
+}
+
 #main,
 #granted-text,
 #denied-text {
