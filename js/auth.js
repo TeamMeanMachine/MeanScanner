@@ -50,6 +50,7 @@ function updateSigninStatus(isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
     document.querySelector('#pills-qr-tab').click();
+    document.querySelector('#pills-qr-tab').classList.remove('disabled');
     // nameInput.value = 'Ayla C'; //just for testing
   } else {
     authorizeButton.style.display = 'block';

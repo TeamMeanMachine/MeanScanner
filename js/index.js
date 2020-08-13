@@ -97,6 +97,7 @@ async function scan() {
     login();
     document.querySelector('#scan').innerHTML = '<i class="fas fa-qrcode"></i> QR Code';
     document.querySelector('#pills-sheet-tab').click();
+    document.querySelector('#pills-sheet-tab').classList.remove('disabled');
   } catch (err) {
     alert(err);
   }

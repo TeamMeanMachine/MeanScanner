@@ -7,14 +7,17 @@
     <link rel="stylesheet" href="/css/norm.css" />
     <link rel="stylesheet" href="/css/index.css" />
   </head>
-  <body>
-    <h1>MeanScanner QR Generator Demo</h1>
+  <body style="padding: 25px;">
+    <h1>MeanScanner QR Generator</h1>
 
     <form id="generate">
-      <input type="text" id="id" required>
+      <label>First Name<br><input type="text" id="first" required></label><br><br>
+      <label>Last Initial<br><input type="text" id="last" required></label><br><br>
       <button type="submit">Generate</button>
     </form>
-  
+    <br>
+    <hr>
+    <br>
     <canvas id="canvas"></canvas>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
@@ -22,7 +25,8 @@
       document.querySelector('#generate').onsubmit = () => {
         const qr = new QRious({
           element: document.querySelector('#canvas'),
-          value: `TMM${document.querySelector('#id').value}`,
+          value: `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`,
+          size: 300,
         });
         return false;
       }

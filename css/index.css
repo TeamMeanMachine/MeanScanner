@@ -24,9 +24,18 @@ canvas {
 .nav-link:hover,
 .nav-link:active {
   color: #dc3645;
-  background: #dc36443f;
+  background: #1b1b1b;
 }
 
 .nav-link.active {
   background: #dc3645 !important;
+}
+
+table, thead {
+  background: #000 !important;
+  border-color: #000;
+}
+
+.bg-dark {
+  background: rgba(255, 255, 255, 0.05) !important;
 }
