@@ -121,15 +121,12 @@ class QRScanner {
 
   _validateName(parts) {
     if (parts.length !== 2) {
-      requestAnimationFrame(this._step.bind(this));
       throw new Error('Parts length is not 2');
     }
     if (typeof parts[0] !== 'string' || typeof parts[1] !== 'string') {
-      requestAnimationFrame(this._step.bind(this));
       throw new Error('Parts type is not string');
     }
     if (!/^[a-zA-Z]+$/.test(parts[0]) || !/^[a-zA-Z]+$/.test(parts[1])) {
-      requestAnimationFrame(this._step.bind(this));
       throw new Error('Parts contain characters that are not letters');
     }
   }
