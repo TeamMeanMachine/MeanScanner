@@ -22,7 +22,7 @@
       document.querySelector('#generate').onsubmit = () => {
         const qr = new QRious({
           element: document.querySelector('#canvas'),
-          value: document.querySelector('#id').value.toUpperCase()
+          value: document.querySelector('#id').value,
         });
         return false;
       }

@@ -107,7 +107,7 @@ class QRScanner {
 
   _parseName(data) {
     // Grabs the first 2 elems after split to get FIRST LAST_INITIAL (ex. Aiden B)
-    const parts = data.toUpperCase().split(' ');
+    const parts = data.split(' ');
     return parts.slice(0, 2);
   }
 }

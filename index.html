@@ -127,11 +127,13 @@
     <a href="/qrgenerator.html">QRGenerator</a> | <a href="/qrscanner.html">QRScanner</a>
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
+    <canvas id="canvas"></canvas>
+
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <div id="login">
       <p>Who are you? Log in with:</p>
-      <p><button disabled>QR Code (coming soon&trade;)</button></p>
+      <p><button onclick="scan()">QR Code</button></p>
       <p>- or -</p>
       <p><label>Username<br><input id="username"></label></p>
       <p><button onclick="login()">Log in</button></p>
@@ -148,6 +150,8 @@
       <p>History</p>
       <ul id="history-list"></ul>
     </div>
+    <script src="/js/jsQR.js"></script>
+    <script src="/js/QRScanner.js"></script>
     <script src="/js/index.js"></script>
   </body>
 </html>

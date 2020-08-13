@@ -82,3 +82,16 @@ function logout() {
   deniedText.style.removeProperty("display");
   localStorage.removeItem("user");
 }
+
+const qr = new QRScanner({
+  canvas: '#canvas',
+  draw: {
+    lineWidth: 2,
+    strokeStyle: 'red',
+  },
+});
+
+async function scan() {
+  const data = await qr.scan();
+  document.querySelector('#username').value = data.name;
+}
