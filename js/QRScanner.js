@@ -92,9 +92,9 @@ class QRScanner {
           this.video.pause();
           return;
         } catch (err) {
-          console.error(err);
           this._drawLine(topLeftCorner, bottomRightCorner, this.draw.failStrokeStyle);
           this._drawLine(topRightCorner, bottomLeftCorner, this.draw.failStrokeStyle);
+          console.error(err);
         }
       }
     }
@@ -116,23 +116,28 @@ class QRScanner {
   _parseName(data) {
     // Grabs the first 2 elems after split to get FIRST LAST_INITIAL (ex. Aiden B)
     const parts = data.split(' ').slice(0, 2);
-    this._validateName(parts);
-    return parts;
+    return this._validateName(parts);
   }
 
   _validateName(parts) {
-    if (!parts[0].startsWith('​')) {
-      throw new Error('Validation prefix not found');
-    }
     if (parts.length !== 2) {
       throw new Error('Parts length is not 2');
     }
+    if (!parts[0].startsWith('TMM')) {
+      throw new Error('Validation prefix not found');
+    }
+    parts[0] = parts[0].replace('TMM', '');
     if (typeof parts[0] !== 'string' || typeof parts[1] !== 'string') {
       throw new Error('Parts type is not string');
     }
     if (!/^[a-zA-Z]+$/.test(parts[0]) || !/^[a-zA-Z]+$/.test(parts[1])) {
       throw new Error('Parts contain characters that are not letters');
     }
+    return parts;
+  }
+
+  _wait(ms) {
+    return new Promise(res => setTimeout(res, ms));
   }
 }
 
