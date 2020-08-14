@@ -140,10 +140,6 @@ class QRScanner {
     }
     return parts;
   }
-
-  _wait(ms) {
-    return new Promise((res) => setTimeout(res, ms));
-  }
 }
 
-window.qrscan = QRScanner;
+window.QRScanner = QRScanner;

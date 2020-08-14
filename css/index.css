@@ -12,6 +12,8 @@ body {
 
 canvas {
   transition: visibility 0s linear 0s, opacity 300ms;
+  border-radius: 5px;
+  border: 1.5px solid #dc3545;
 }
 
 #main,
