@@ -40,20 +40,8 @@
                     role="tab"
                     aria-controls="pills-oauth"
                     aria-selected="true"
-                    ><i class="fas fa-lock"></i> OAuth</a
-                  >
-                </li>
-                <li class="nav-item" role="presentation">
-                  <a
-                    class="nav-link disabled"
-                    id="pills-qr-tab"
-                    data-toggle="pill"
-                    href="#pills-qr"
-                    role="tab"
-                    aria-controls="pills-qr"
-                    aria-selected="false"
                     ><i class="fas fa-sign-in"></i> Login</a
-                  >
+                    >
                 </li>
                 <li class="nav-item" role="presentation">
                   <a
@@ -78,30 +66,30 @@
               role="tabpanel"
               aria-labelledby="pills-oauth-tab"
             >
-              <div class="card bg-dark">
+              <div class="card bg-dark" id="oauth-card">
                 <div class="card-body">
-                  <p>
-                    Make sure to authorize a Google account that has access to the shared drive to be able to log your hours to the Google Tracking
-                    Sheet
+                  <p id="oauth-desc">
+                    Make sure to authorize a Google account that has access to the shared drive to
+                    be able to log your hours to the Google Tracking Sheet
                   </p>
-                  <button id="authorize-button" class="btn btn-danger">
+                  <button id="authorize-button" class="btn btn-danger" hidden>
                     <i class="fas fa-user"></i> Authorize
                   </button>
-                  <button id="deauthorize-button" class="btn btn-secondary">
+                  <button id="deauthorize-button" class="btn btn-secondary" hidden>
                     <i class="fas fa-user"></i> Deauthorize
                   </button>
                 </div>
               </div>
-            </div>
-
-            <div class="tab-pane fade" id="pills-qr" role="tabpanel" aria-labelledby="pills-qr-tab">
-              <div class="card bg-dark">
+              <br>
+              <div class="card bg-dark" id="login-card" hidden>
                 <div class="card-body">
                   <div id="login">
-                    <p>Who are you? Log in with:</p>
+                    <p id="login-desc">Who are you? Log in with:</p>
                     <p>
                       <button onclick="scan()" class="btn btn-danger" id="scan">
                         <i class="fas fa-qrcode"></i> QR Code</button
+                      > <button onclick="stop()" class="btn btn-secondary" id="stop" disabled>
+                        <i class="fas fa-stop"></i> Stop</button
                       ><br /><br />
 
                       <canvas id="canvas" hidden></canvas>

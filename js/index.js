@@ -59,11 +59,13 @@ function login() {
       setupUI();
       grantedText.style.display = 'block';
       localStorage.setItem('user', user.name);
+      document.querySelector('#login-desc').innerText = `You're all set!`;
       return;
     }
   });
   if (!userInfo) {
     deniedText.style.display = 'block';
+    document.querySelector('#login-desc').innerText = `Who are you? Log in with:`;
   }
 }
 
@@ -89,8 +91,10 @@ const qr = new QRScanner({
 
 async function scan() {
   try {
+    location.hash = '#canvas';
     document.querySelector('#scan').innerHTML =
       '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Scanning...';
+    document.querySelector('#stop').disabled = false;
     const data = await qr.scan();
     document.querySelector('#username').value = data.name;
     qr.stop();
@@ -98,9 +102,16 @@ async function scan() {
     document.querySelector('#scan').innerHTML = '<i class="fas fa-qrcode"></i> QR Code';
     document.querySelector('#pills-sheet-tab').classList.remove('disabled');
     document.querySelector('#pills-sheet-tab').click();
+    document.querySelector('#stop').disabled = true;
   } catch (err) {
     alert(err);
   }
+}
+
+async function stop() {
+  qr.stop();
+  document.querySelector('#scan').innerHTML = '<i class="fas fa-qrcode"></i> QR Code';
+  document.querySelector('#stop').disabled = true;
 }
 
 const log = new LogManager();

@@ -49,18 +49,30 @@ class LogManager {
     gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus.bind(this));
     this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     this.authorizeButton.onclick = this.handleAuthClick.bind(this);
-    this.deauthorizeButton.onclick = this.handleDeauthClick.bind(this);
+    this.deauthorizeButton.onclick = () => {
+      if (
+        confirm(
+          'Are you sure you want to deauthorize the current Google account? Do not do this unless you know exactly what you are doing.'
+        )
+      )
+        this.handleDeauthClick.bind(this);
+    };
   }
 
   updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
-      this.authorizeButton.style.display = 'none';
-      this.deauthorizeButton.style.display = 'block';
-      document.querySelector('#pills-qr-tab').classList.remove('disabled');
-      document.querySelector('#pills-qr-tab').click();
+      this.authorizeButton.hidden = true;
+      this.deauthorizeButton.hidden = false;
+      // document.querySelector('#pills-sheet-tab').classList.remove('disabled');
+      // document.querySelector('#pills-sheet-tab').click();
+      document.querySelector('#oauth-desc').innerText = ``;
+      document.querySelector('#login-card').hidden = false;
     } else {
-      this.authorizeButton.style.display = 'block';
-      this.deauthorizeButton.style.display = 'none';
+      this.authorizeButton.hidden = false;
+      this.deauthorizeButton.hidden = true;
+      document.querySelector('#login-card').hidden = true;
+      document.querySelector('#oauth-desc').innerText =
+        'Make sure to authorize a Google account that has access to the shared drive to be able to log your hours to the Google Tracking Sheet';
     }
   }
 
@@ -83,17 +95,15 @@ class LogManager {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      for (let i = 0; i < result.values.length; i++) {
-        const row = result.values[i];
-
+      for (const row of result.values.reverse()) {
         if (row[1].split('-')[0] == name) {
           const activeDate = new Date(Date.parse(row[0]));
           activeDate.setHours(0, 0, 0, 0);
           if (this.datesEqual(today, activeDate)) {
             this.tableBody.innerHTML += `<tr>
-              <th scope="row">${row[0]}</th>
+              <th scope="row">${row[0]} <span class="badge badge-light">TODAY</span></h1></th>
               <td>${row[1].split('-')[0]}</td>
-              <td>${row[1].split('-')[1]} - TODAY</td>
+              <td>${row[1].split('-')[1]}</td>
             </tr>`;
           } else {
             this.tableBody.innerHTML += `<tr>
