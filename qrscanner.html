@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://kit-pro.fontawesome.com/releases/v5.11.2/css/pro.min.css"
+    />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+
+    <title>QR Scanner | MeanScanner</title>
+  </head>
+  <body>
+    <h1>MeanScanner QR Scanner Demo</h1>
+    <button class="btn btn-primary" id="scan"><i class="fas fa-qrcode"></i> Scan</button>
+    <button class="btn btn-warning" id="hide">Hide</button>
+    <button class="btn btn-warning" id="show">Show</button>
+    <button class="btn btn-danger" id="stop">Stop</button>
+    <button class="btn btn-danger" id="destroy">Destroy</button>
+    <h1 id="output" style="color: red;"></h1>
+    <br />
+    <canvas id="canvas"></canvas>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/jsQR.js"></script>
+    <!-- custom wrapper for jsQR -->
+    <script src="/js/QRScanner.js"></script>
+    <script defer>
+      const qr = new QRScanner({
+        canvas: '#canvas', // Query refs for elems
+        draw: {
+          // Canvas draw settings
+          lineWidth: 2,
+          strokeStyle: 'red',
+        },
+      });
+
+      document.querySelector('#scan').addEventListener('click', async () => {
+        const data = await qr.scan();
+        document.querySelector('#output').innerText = data.name;
+      });
+
+      document.querySelector('#hide').addEventListener('click', () => {
+        qr.hide();
+      });
+
+      document.querySelector('#show').addEventListener('click', () => {
+        qr.show();
+      });
+
+      document.querySelector('#stop').addEventListener('click', () => {
+        qr.stop();
+      });
+
+      document.querySelector('#destroy').addEventListener('click', () => {
+        if (!confirm('This action is irreversible! Are you sure you want to continue')) return;
+        qr.destroy();
+      });
+    </script>
+  </body>
+</html>
