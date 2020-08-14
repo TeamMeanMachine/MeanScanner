@@ -55,7 +55,7 @@ class LogManager {
           'Are you sure you want to deauthorize the current Google account? Do not do this unless you know exactly what you are doing.'
         )
       )
-        this.handleDeauthClick.bind(this);
+        this.handleDeauthClick();
     };
   }
 
