@@ -108,3 +108,15 @@ const log = new LogManager();
 function auth() {
   log.handleClientLoad();
 }
+
+function entryIn() {
+  log.addEntry(document.querySelector('#username').value, 'in');
+}
+
+function entryOut() {
+  log.addEntry(document.querySelector('#username').value, 'out');
+}
+
+function list() {
+  log.renderTable(document.querySelector('#username').value);
+}

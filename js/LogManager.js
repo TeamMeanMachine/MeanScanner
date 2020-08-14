@@ -10,6 +10,7 @@ class LogManager {
     this.SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
     this.DISCOVERY_DOCS = ['https://sheets.googleapis.com/$discovery/rest?version=v4'];
 
+    this.tableBody = document.querySelector(opts.tableBody || '#content');
     this.authorizeButton = document.querySelector(opts.authorizeButton || '#authorize-button');
     this.deauthorizeButton = document.querySelector(
       opts.deauthorizeButton || '#deauthorize-button'
@@ -25,6 +26,14 @@ class LogManager {
 
   handleClientLoad() {
     gapi.load('client:auth2', this.initClient.bind(this));
+  }
+
+  handleAuthClick() {
+    gapi.auth2.getAuthInstance().signIn();
+  }
+
+  handleDeauthClick() {
+    gapi.auth2.getAuthInstance().signOut();
   }
 
   async initClient() {
@@ -46,7 +55,7 @@ class LogManager {
   updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
       this.authorizeButton.style.display = 'none';
-      this. deauthorizeButton.style.display = 'block';
+      this.deauthorizeButton.style.display = 'block';
       document.querySelector('#pills-qr-tab').classList.remove('disabled');
       document.querySelector('#pills-qr-tab').click();
     } else {
@@ -55,20 +64,49 @@ class LogManager {
     }
   }
 
-  handleAuthClick() {
-    gapi.auth2.getAuthInstance().signIn();
-  }
-
-  handleDeauthClick() {
-    gapi.auth2.getAuthInstance().signOut();
-  }
-
   datesEqual(date1, date2) {
     return (
       date1.getDate() == date2.getDate() &&
       date1.getMonth() == date2.getMonth() &&
       date1.getFullYear() == date2.getFullYear()
     );
+  }
+
+  async renderTable(name) {
+    this.tableBody.innerHTML = '';
+    const { result } = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: this.SPREADSHEET_ID,
+      range: 'FormResponses!A2:B',
+    });
+
+    if (result.values.length > 0) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < result.values.length; i++) {
+        const row = result.values[i];
+
+        if (row[1].split('-')[0] == name) {
+          const activeDate = new Date(Date.parse(row[0]));
+          activeDate.setHours(0, 0, 0, 0);
+          if (this.datesEqual(today, activeDate)) {
+            this.tableBody.innerHTML += `<tr>
+              <th scope="row">${row[0]}</th>
+              <td>${row[1].split('-')[0]}</td>
+              <td>${row[1].split('-')[1]} - TODAY</td>
+            </tr>`;
+          } else {
+            this.tableBody.innerHTML += `<tr>
+              <th scope="row">${row[0]}</th>
+              <td>${row[1].split('-')[0]}</td>
+              <td>${row[1].split('-')[1]}</td>
+            </tr>`;
+          }
+        }
+      }
+    }
+
+    this.tableBody.innerHTML;
   }
 }
 

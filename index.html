@@ -81,7 +81,7 @@
               <div class="card bg-dark">
                 <div class="card-body">
                   <p>
-                    Make sure to authorize a google account to be able to access the Google Tracking
+                    Make sure to authorize a Google account that has access to the shared drive to be able to log your hours to the Google Tracking
                     Sheet
                   </p>
                   <button id="authorize-button" class="btn btn-danger">
@@ -127,9 +127,15 @@
             >
               <div class="card bg-dark">
                 <div class="card-body">
-                  <p>Data from sheet, click Read sheet</p>
-                  <button onclick="readSheet()" class="btn btn-secondary">
-                    <i class="fas fa-file-spreadsheet"></i> Read sheet
+                  <!-- <p>Data from sheet, click Read sheet</p> -->
+                  <button onclick="entryIn()" class="btn btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i> Sign in
+                  </button>
+                  <button onclick="entryOut()" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Sign out
+                  </button>
+                  <button onclick="list()" class="btn btn-secondary">
+                    <i class="fas fa-table"></i> List
                   </button>
                   <table class="table table-dark mt-3">
                     <thead>
