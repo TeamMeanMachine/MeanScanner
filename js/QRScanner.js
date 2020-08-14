@@ -81,7 +81,7 @@ class QRScanner {
         const { topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner } = qr.location;
 
         try {
-          const nameParts = this._parseName(qr.data);
+          const nameParts = this._parseName(atob(qr.data));
           const event = new CustomEvent('qrscan', {
             bubbles: true,
             detail: {
