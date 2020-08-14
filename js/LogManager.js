@@ -49,7 +49,7 @@ class LogManager {
     gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus.bind(this));
     this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     this.authorizeButton.onclick = this.handleAuthClick.bind(this);
-    this.signoutButton.onclick = this.handleDeauthClick.bind(this);
+    this.deauthorizeButton.onclick = this.handleDeauthClick.bind(this);
   }
 
   updateSigninStatus(isSignedIn) {
