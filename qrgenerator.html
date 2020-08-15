@@ -22,7 +22,10 @@
     ><br /><br />
     <label>Last Initial<br /><input class="form-control" type="text" id="last" required/></label
     ><br /><br />
-    <button type="button" class="btn btn-danger" onclick="submit();">Generate</button>
+    <button type="button" class="btn btn-danger" onclick="submitNormal();">Generate Normal</button>
+    <button type="button" class="btn btn-danger" onclick="submitLogo();">Generate with Logo</button>
+    <br /><br />
+    <input id="output" disabled />
 
     <br />
     <hr />
@@ -41,8 +44,33 @@
     ></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="/js/QRCodeLib.js"></script>
     <script defer>
-      const submit = () => {
+      const submitLogo = () => {
+        let qrcode = new QrCodeWithLogo({
+          canvas: document.querySelector('#canvas'),
+          content: btoa(
+            `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
+          ),
+          width: 300,
+          logo: {
+            src: 'https://github.com/Aidunlin/MeanScout/blob/ebd252f58e61c8788ebf7188760f81f8266259df/logo512.png?raw=true',
+            borderSize: 0.02,
+            logoSize: 0.2
+            // borderSize: 0.02,
+            // borderRadius: 1000,
+            // logoSize: 0.2
+          },
+        });
+
+        qrcode.toCanvas();
+
+        document.querySelector('#output').value = btoa(
+          `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
+        );
+      };
+
+      const submitNormal = () => {
         const qr = new QRious({
           element: document.querySelector('#canvas'),
           value: btoa(
@@ -50,6 +78,10 @@
           ),
           size: 300,
         });
+
+        document.querySelector('#output').value = btoa(
+          `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
+        );
       };
     </script>
   </body>

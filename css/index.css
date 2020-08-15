@@ -6,6 +6,10 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
+.btn, .form-control {
+  box-shadow: none !important;
+}
+
 .fa-clock {
   color: #dc3545;
 }
