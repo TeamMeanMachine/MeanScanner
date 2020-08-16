@@ -17,10 +17,10 @@ class LogManager {
     );
   }
 
-  addEntry(name, type) {
+  async addEntry(name, type) {
     type = type === 'out' ? 'out' : 'in';
-    fetch(
-      `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?usp=pp_url&entry.394065435=${name}-${type}`
+    return fetch(
+      `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?usp=pp_url&entry.394065435=${name}&entry.1715634820=${type}`
     );
   }
 
@@ -88,35 +88,43 @@ class LogManager {
     this.tableBody.innerHTML = '';
     const { result } = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: this.SPREADSHEET_ID,
-      range: 'FormResponses!A2:B',
+      range: 'FormResponses!A2:C',
     });
 
     if (result.values.length > 0) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
+      result.values = result.values.filter(arr => arr.length);
+
       for (const row of result.values.reverse()) {
-        if (row[1].split('-')[0] == name) {
+        console.log(row);
+        if (row[1] == name) {
           const activeDate = new Date(Date.parse(row[0]));
+          const date = activeDate.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            // year: 'numeric',
+            day: 'numeric',
+          });
+          const time = activeDate.toLocaleTimeString('en-US', { timeStyle: 'short' });
           activeDate.setHours(0, 0, 0, 0);
           if (this.datesEqual(today, activeDate)) {
             this.tableBody.innerHTML += `<tr>
-              <th scope="row">${row[0]} <span class="badge badge-light">TODAY</span></h1></th>
-              <td>${row[1].split('-')[0]}</td>
-              <td>${row[1].split('-')[1]}</td>
+              <th scope="row">${date} <span class="text-muted">${time}</span> <span class="badge bg-danger">TODAY</span></h1></th>
+              <td>${row[1]}</td>
+              <td>${row[2]}</td>
             </tr>`;
           } else {
             this.tableBody.innerHTML += `<tr>
-              <th scope="row">${row[0]}</th>
-              <td>${row[1].split('-')[0]}</td>
-              <td>${row[1].split('-')[1]}</td>
+              <th scope="row">${date}</th>
+              <td>${row[1]}</td>
+              <td>${row[2]}</td>
             </tr>`;
           }
         }
       }
     }
-
-    this.tableBody.innerHTML;
   }
 }
 
