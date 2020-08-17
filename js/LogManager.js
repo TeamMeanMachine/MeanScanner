@@ -117,7 +117,7 @@ class LogManager {
             </tr>`;
           } else {
             this.tableBody.innerHTML += `<tr>
-              <th scope="row">${date}</th>
+              <th scope="row">${date} <span class="text-muted">${time}</span></th>
               <td>${row[1]}</td>
               <td>${row[2]}</td>
             </tr>`;
