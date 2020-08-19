@@ -83,7 +83,7 @@ class QRScanner {
         const { topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner } = qr.location;
 
         try {
-          const nameParts = this._parseName(atob(qr.data));
+          const nameParts = this._parseName(qr.data);
           const event = new CustomEvent('qrscan', {
             bubbles: true,
             detail: {
@@ -126,10 +126,12 @@ class QRScanner {
       throw new Error('Invalid content (no form url)');
     }
     const url = new URL(data);
+    console.log(data);
     const parts = url.searchParams
       .get('entry.394065435')
-      .split('+')
+      .split(' ')
       .slice(0, 2);
+    console.log(parts);
     return this._validateName(parts);
   }
 
