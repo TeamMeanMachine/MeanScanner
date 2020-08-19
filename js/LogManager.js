@@ -4,6 +4,7 @@
 
 class LogManager {
   constructor(opts = {}) {
+    this.BASE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=';
     this.SPREADSHEET_ID = '1GEkN-CR8aFFLnDy-ZKuhokI3azK-ygSEJp4Q6y2E2pg';
     this.CLIENT_ID = '938209231565-tlsrper5vjdaboo8qghjfu3tpgqqbajk.apps.googleusercontent.com';
     this.API_KEY = 'AIzaSyDKscGpqmGmB8DlAPJuA0jGGOfB9tA4FKg';
@@ -17,10 +18,9 @@ class LogManager {
     );
   }
 
-  async addEntry(name, type) {
-    type = type === 'out' ? 'out' : 'in';
+  async addEntry(name) {
     return fetch(
-      `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?usp=pp_url&entry.394065435=${name}&entry.1715634820=${type}`
+      `${this.BASE_FORM_URL}${name}`
     );
   }
 
@@ -88,7 +88,7 @@ class LogManager {
     this.tableBody.innerHTML = '';
     const { result } = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: this.SPREADSHEET_ID,
-      range: 'FormResponses!A2:C',
+      range: 'FormResponses!A2:B',
     });
 
     if (result.values.length > 0) {
@@ -113,13 +113,11 @@ class LogManager {
             this.tableBody.innerHTML += `<tr>
               <th scope="row">${date} <span class="text-muted">${time}</span> <span class="badge bg-danger">TODAY</span></h1></th>
               <td>${row[1]}</td>
-              <td>${row[2]}</td>
             </tr>`;
           } else {
             this.tableBody.innerHTML += `<tr>
               <th scope="row">${date} <span class="text-muted">${time}</span></th>
               <td>${row[1]}</td>
-              <td>${row[2]}</td>
             </tr>`;
           }
         }

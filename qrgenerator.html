@@ -49,14 +49,15 @@
       const submitLogo = () => {
         let qrcode = new QrCodeWithLogo({
           canvas: document.querySelector('#canvas'),
-          content: btoa(
-            `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
-          ),
+          content: `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=${
+            document.querySelector('#first').value
+          }+${document.querySelector('#last').value}`,
           width: 300,
           logo: {
-            src: 'https://github.com/Aidunlin/MeanScout/blob/ebd252f58e61c8788ebf7188760f81f8266259df/logo512.png?raw=true',
+            src:
+              'https://github.com/Aidunlin/MeanScout/blob/ebd252f58e61c8788ebf7188760f81f8266259df/logo512.png?raw=true',
             borderSize: 0.02,
-            logoSize: 0.2
+            logoSize: 0.2,
             // borderSize: 0.02,
             // borderRadius: 1000,
             // logoSize: 0.2
@@ -65,23 +66,27 @@
 
         qrcode.toCanvas();
 
-        document.querySelector('#output').value = btoa(
-          `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
-        );
+        document.querySelector(
+          '#output'
+        ).value = `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=${
+          document.querySelector('#first').value
+        }+${document.querySelector('#last').value}`;
       };
 
       const submitNormal = () => {
         const qr = new QRious({
           element: document.querySelector('#canvas'),
-          value: btoa(
-            `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
-          ),
+          value: `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=${
+            document.querySelector('#first').value
+          }+${document.querySelector('#last').value}`,
           size: 300,
         });
 
-        document.querySelector('#output').value = btoa(
-          `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
-        );
+        document.querySelector(
+          '#output'
+        ).value = `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=${
+          document.querySelector('#first').value
+        }+${document.querySelector('#last').value}`;
       };
     </script>
   </body>

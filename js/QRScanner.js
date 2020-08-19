@@ -4,7 +4,9 @@
 
 class QRScanner {
   constructor(opts = {}) {
-    this.prefix = opts.prefix || 'TMM';
+    this.baseFormURL =
+      opts.baseFormURL ||
+      'https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=';
     this.video = document.createElement('video');
     this.canvas = document.querySelector(opts.canvas) || '#canvas';
     this.ctx = this.canvas.getContext('2d');
@@ -120,7 +122,14 @@ class QRScanner {
   }
 
   _parseName(data) {
-    const parts = data.split(' ').slice(0, 2);
+    if (!data.includes(this.baseFormURL)) {
+      throw new Error('Invalid content (no form url)');
+    }
+    const url = new URL(data);
+    const parts = url.searchParams
+      .get('entry.394065435')
+      .split('+')
+      .slice(0, 2);
     return this._validateName(parts);
   }
 
@@ -128,10 +137,6 @@ class QRScanner {
     if (parts.length !== 2) {
       throw new Error('Parts length is not 2');
     }
-    if (!parts[0].startsWith(this.prefix)) {
-      throw new Error('Validation prefix not found');
-    }
-    parts[0] = parts[0].replace(this.prefix, '');
     if (typeof parts[0] !== 'string' || typeof parts[1] !== 'string') {
       throw new Error('Parts type is not string');
     }
