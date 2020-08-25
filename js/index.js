@@ -91,11 +91,15 @@ const qr = new QRScanner({
 
 async function scan() {
   try {
+    console.log("Initiating scan. Hi.");
     location.hash = '#canvas';
     document.querySelector('#scan').innerHTML =
       '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Scanning...';
     document.querySelector('#stop').disabled = false;
     const data = await qr.scan();
+    console.log("Hello.");
+    console.log(data);
+    console.log(data.name);
     document.querySelector('#username').value = data.name;
     qr.stop();
     login();
@@ -109,9 +113,9 @@ async function scan() {
 }
 
 async function stop() {
-  qr.stop();
   document.querySelector('#scan').innerHTML = '<i class="fas fa-qrcode"></i> QR Code';
   document.querySelector('#stop').disabled = true;
+  qr.stop();
 }
 
 const log = new LogManager();
