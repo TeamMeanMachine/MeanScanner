@@ -1,3 +1,10 @@
+if ("serviceWorker" in navigator) {
+  window.onload = () => {
+    // Uncomment the line below to enable the service worker
+    // navigator.serviceWorker.register("./sw.js");
+  };
+}
+
 // Get user base data from wherever
 let userBase = [
   {
