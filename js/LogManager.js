@@ -20,7 +20,7 @@ class LogManager {
   addEntry(name, type) {
     type = type === 'out' ? 'out' : 'in';
     fetch(
-      `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?usp=pp_url&entry.394065435=${name}-${type}`
+      `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?usp=pp_url&entry.394065435=${name}&type=${type}`
     );
   }
 
@@ -88,30 +88,18 @@ class LogManager {
     this.tableBody.innerHTML = '';
     const { result } = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: this.SPREADSHEET_ID,
-      range: 'FormResponses!A2:B',
+      range: 'HoursToday!A2:E',
     });
 
     if (result.values.length > 0) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      for (const row of result.values.reverse()) {
-        if (row[1].split('-')[0] == name) {
-          const activeDate = new Date(Date.parse(row[0]));
-          activeDate.setHours(0, 0, 0, 0);
-          if (this.datesEqual(today, activeDate)) {
-            this.tableBody.innerHTML += `<tr>
-              <th scope="row">${row[0]} <span class="badge badge-light">TODAY</span></h1></th>
-              <td>${row[1].split('-')[0]}</td>
-              <td>${row[1].split('-')[1]}</td>
-            </tr>`;
-          } else {
-            this.tableBody.innerHTML += `<tr>
-              <th scope="row">${row[0]}</th>
-              <td>${row[1].split('-')[0]}</td>
-              <td>${row[1].split('-')[1]}</td>
-            </tr>`;
-          }
+      for (const row of result.values) {
+        if(row[0] != "") {
+          const userHighlight = (row[0] == name)? ' style="background-color: yellow"' : '';
+          this.tableBody.innerHTML += `<tr${userHighlight}>
+            <th scope="row">${row[0]}</th>
+            <td>${row[1]}</td>
+            <td>${row[3]}</td>
+          </tr>`;
         }
       }
     }

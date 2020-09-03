@@ -4,7 +4,7 @@
 
 class QRScanner {
   constructor(opts = {}) {
-    this.prefix = opts.prefix || 'TMM';
+    this.prefix = opts.prefix || '';
     this.video = document.createElement('video');
     this.canvas = document.querySelector(opts.canvas) || '#canvas';
     this.ctx = this.canvas.getContext('2d');
@@ -81,7 +81,7 @@ class QRScanner {
         const { topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner } = qr.location;
 
         try {
-          const nameParts = this._parseName(atob(qr.data));
+          const nameParts = this._parseName(qr.data);
           const event = new CustomEvent('qrscan', {
             bubbles: true,
             detail: {
@@ -120,6 +120,7 @@ class QRScanner {
   }
 
   _parseName(data) {
+    console.log(data);
     const parts = data.split(' ').slice(0, 2);
     return this._validateName(parts);
   }

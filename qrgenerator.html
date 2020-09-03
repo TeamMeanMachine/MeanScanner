@@ -48,9 +48,7 @@
       const submit = () => {
         const qr = new QRious({
           element: document.querySelector('#canvas'),
-          value: btoa(
-            `TMM${document.querySelector('#first').value} ${document.querySelector('#last').value}`
-          ),
+          value: `${document.querySelector('#first').value} ${document.querySelector('#last').value}`,
           size: 300,
         });
       };
