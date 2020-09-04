@@ -3,6 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="An app prototype for the hour-tracking project.">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="./manifest.json">
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
@@ -13,8 +16,8 @@
       rel="stylesheet"
       href="https://kit-pro.fontawesome.com/releases/v5.11.2/css/pro.min.css"
     />
-    <link rel="stylesheet" href="/css/index.css" />
-    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="icon" type="image/png" href="./img/logo.png" />
 
     <title>QR Scanner | MeanScanner</title>
   </head>
@@ -39,9 +42,9 @@
       integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
       crossorigin="anonymous"
     ></script>
-    <script src="/js/jsQR.js"></script>
+    <script src="./js/jsQR.js"></script>
     <!-- custom wrapper for jsQR -->
-    <script src="/js/QRScanner.js"></script>
+    <script src="./js/QRScanner.js"></script>
     <script defer>
       const qr = new QRScanner({
         canvas: '#canvas', // Query refs for elems

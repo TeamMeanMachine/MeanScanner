@@ -17,11 +17,11 @@ class LogManager {
       opts.deauthorizeButton || '#deauthorize-button'
     );
   }
-
+  
   async addEntry(name) {
     return fetch(
       `${this.BASE_FORM_URL}${name}`
-    );
+    )
   }
 
   handleClientLoad() {
@@ -88,38 +88,18 @@ class LogManager {
     this.tableBody.innerHTML = '';
     const { result } = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: this.SPREADSHEET_ID,
-      range: 'FormResponses!A2:B',
+      range: 'HoursToday!A2:E',
     });
 
     if (result.values.length > 0) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      result.values = result.values.filter(arr => arr.length);
-
-      for (const row of result.values.reverse()) {
-        console.log(row);
-        if (row[1] == name) {
-          const activeDate = new Date(Date.parse(row[0]));
-          const date = activeDate.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            // year: 'numeric',
-            day: 'numeric',
-          });
-          const time = activeDate.toLocaleTimeString('en-US', { timeStyle: 'short' });
-          activeDate.setHours(0, 0, 0, 0);
-          if (this.datesEqual(today, activeDate)) {
-            this.tableBody.innerHTML += `<tr>
-              <th scope="row">${date} <span class="text-muted">${time}</span> <span class="badge bg-danger">TODAY</span></h1></th>
-              <td>${row[1]}</td>
-            </tr>`;
-          } else {
-            this.tableBody.innerHTML += `<tr>
-              <th scope="row">${date} <span class="text-muted">${time}</span></th>
-              <td>${row[1]}</td>
-            </tr>`;
-          }
+      for (const row of result.values) {
+        if(row[0] != "") {
+          const userHighlight = (row[0] == name)? ' style="background-color: yellow"' : '';
+          this.tableBody.innerHTML += `<tr${userHighlight}>
+            <th scope="row">${row[0]}</th>
+            <td>${row[1]}</td>
+            <td>${row[3]}</td>
+          </tr>`;
         }
       }
     }

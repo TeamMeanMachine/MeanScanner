@@ -1,3 +1,10 @@
+if ("serviceWorker" in navigator) {
+  window.onload = () => {
+    // Uncomment the line below to enable the service worker
+    // navigator.serviceWorker.register("./sw.js");
+  };
+}
+
 // Get user base data from wherever
 let userBase = [
   {
@@ -109,9 +116,9 @@ async function scan() {
 }
 
 async function stop() {
-  qr.stop();
   document.querySelector('#scan').innerHTML = '<i class="fas fa-qrcode"></i> QR Code';
   document.querySelector('#stop').disabled = true;
+  qr.stop();
 }
 
 const log = new LogManager();
