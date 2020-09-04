@@ -4,6 +4,7 @@
 
 class LogManager {
   constructor(opts = {}) {
+    this.BASE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=';
     this.SPREADSHEET_ID = '1GEkN-CR8aFFLnDy-ZKuhokI3azK-ygSEJp4Q6y2E2pg';
     this.CLIENT_ID = '938209231565-tlsrper5vjdaboo8qghjfu3tpgqqbajk.apps.googleusercontent.com';
     this.API_KEY = 'AIzaSyDKscGpqmGmB8DlAPJuA0jGGOfB9tA4FKg';
@@ -16,12 +17,11 @@ class LogManager {
       opts.deauthorizeButton || '#deauthorize-button'
     );
   }
-
-  addEntry(name, type) {
-    type = type === 'out' ? 'out' : 'in';
-    fetch(
-      `https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?usp=pp_url&entry.394065435=${name}&type=${type}`
-    );
+  
+  async addEntry(name) {
+    return fetch(
+      `${this.BASE_FORM_URL}${name}`
+    )
   }
 
   handleClientLoad() {
@@ -103,8 +103,6 @@ class LogManager {
         }
       }
     }
-
-    this.tableBody.innerHTML;
   }
 }
 

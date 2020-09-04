@@ -128,11 +128,13 @@ function auth() {
 }
 
 function entryIn() {
-  log.addEntry(document.querySelector('#username').value, 'in');
+  log.addEntry(document.querySelector('#username').value);
+  setTimeout(() => list(), 1000);
 }
 
 function entryOut() {
-  log.addEntry(document.querySelector('#username').value, 'out');
+  log.addEntry(document.querySelector('#username').value);
+  setTimeout(() => list(), 1000);
 }
 
 function list() {
