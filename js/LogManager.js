@@ -124,6 +124,14 @@ class LogManager {
       }
     }
   }
+
+  async sheetToObject() {
+    const { result } = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: this.SPREADSHEET_ID,
+      range: 'FormResponses!A2:B',
+    });
+    console.log(result);
+  }
 }
 
 window.LogManager = LogManager;
