@@ -4,7 +4,8 @@
 
 class LogManager {
   constructor(opts = {}) {
-    this.BASE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=';
+    this.BASE_FORM_URL =
+      'https://docs.google.com/forms/d/e/1FAIpQLSem6RS-lKZQlT2Ph9lpPOdEll1I7E6ky4dG0mq4o1DZ65WPWQ/formResponse?entry.394065435=';
     this.SPREADSHEET_ID = '1GEkN-CR8aFFLnDy-ZKuhokI3azK-ygSEJp4Q6y2E2pg';
     this.CLIENT_ID = '938209231565-tlsrper5vjdaboo8qghjfu3tpgqqbajk.apps.googleusercontent.com';
     this.API_KEY = 'AIzaSyDKscGpqmGmB8DlAPJuA0jGGOfB9tA4FKg';
@@ -17,11 +18,9 @@ class LogManager {
       opts.deauthorizeButton || '#deauthorize-button'
     );
   }
-  
+
   async addEntry(name) {
-    return fetch(
-      `${this.BASE_FORM_URL}${name}`
-    )
+    return fetch(`${this.BASE_FORM_URL}${name}`);
   }
 
   handleClientLoad() {
@@ -93,8 +92,8 @@ class LogManager {
 
     if (result.values.length > 0) {
       for (const row of result.values) {
-        if(row[0] != "") {
-          const userHighlight = (row[0] == name)? ' style="background-color: yellow"' : '';
+        if (row[0] != '') {
+          const userHighlight = row[0] == name ? ' style="background-color: yellow"' : '';
           this.tableBody.innerHTML += `<tr${userHighlight}>
             <th scope="row">${row[0]}</th>
             <td>${row[1]}</td>
@@ -105,12 +104,39 @@ class LogManager {
     }
   }
 
-  async sheetToObject() {
+  camelize(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+      if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
+      return index === 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+  }
+
+  async sheetToObject(range) {
+    // log.sheetToObject()
     const { result } = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: this.SPREADSHEET_ID,
-      range: 'FormResponses!A2:B',
+      range,
     });
-    console.log(result);
+    const headers = result.values.shift();
+
+    // Fix header formatting and make it serializable
+    for (let i = 0; i < headers.length; i++) {
+      headers[i] = this.camelize(headers[i]);
+    }
+
+    const out = [];
+
+    for (const row of result.values) {
+      const obj = {};
+      for (let i = 0; i < headers.length; i++) {
+        try {
+          obj[headers[i]] = row[i];
+        } catch {} // Handler just in case accessing values that don't exist
+      }
+      out.push(obj);
+    }
+
+    return out;
   }
 }
 
