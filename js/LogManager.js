@@ -105,18 +105,22 @@ class LogManager {
   }
 
   camelize(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-      if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
-      return index === 0 ? match.toLowerCase() : match.toUpperCase();
-    });
+    if (str === '') {
+      return '';
+    } else {
+      let splitString = str.replace(/[^A-Z0-9]/gi, '_').split('_').join('');
+
+      return splitString.charAt(0).toLowerCase() + splitString.slice(1);
+    }
   }
 
   async sheetToObject(range) {
-    // log.sheetToObject()
+    // log.sheetToObject('HoursToday!A1:E')
     const { result } = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: this.SPREADSHEET_ID,
       range,
     });
+    console.log(result);
     const headers = result.values.shift();
 
     // Fix header formatting and make it serializable
@@ -136,6 +140,7 @@ class LogManager {
       out.push(obj);
     }
 
+    console.log(out);
     return out;
   }
 }
