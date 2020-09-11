@@ -85,23 +85,30 @@ class LogManager {
 
   async renderTable(name) {
     this.tableBody.innerHTML = '';
-    const { result } = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: this.SPREADSHEET_ID,
-      range: 'HoursToday!A2:E',
-    });
+    const peopleToday = await this.getHoursToday();
+    console.log(peopleToday);
 
-    if (result.values.length > 0) {
-      for (const row of result.values) {
-        if (row[0] != '') {
-          const userHighlight = row[0] == name ? ' style="background-color: yellow"' : '';
-          this.tableBody.innerHTML += `<tr${userHighlight}>
-            <th scope="row">${row[0]}</th>
-            <td>${row[1]}</td>
-            <td>${row[3]}</td>
-          </tr>`;
-        }
+    if (peopleToday.length > 0) {
+      for (const person of peopleToday) {
+        const userHighlight = person.name == name ? ' style="background-color: yellow"' : '';
+        this.tableBody.innerHTML += `<tr${userHighlight}>
+          <th scope="person">${person.name}</th>
+          <td>${person.lastAction}</td>
+          <td>${person.calculatedHours}</td>
+        </tr>`;
       }
     }
+  }
+
+  async getHoursToday() {
+    const result = await this.sheetToObject("HoursToday!A1:E");
+    const out = [];
+    for(const person of result) {
+      if (person.name != '') {
+        out.push(person);
+      }
+    }
+    return out;
   }
 
   camelize(str) {
