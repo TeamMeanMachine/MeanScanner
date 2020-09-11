@@ -120,7 +120,6 @@ class LogManager {
       spreadsheetId: this.SPREADSHEET_ID,
       range,
     });
-    console.log(result);
     const headers = result.values.shift();
 
     // Fix header formatting and make it serializable
@@ -140,7 +139,6 @@ class LogManager {
       out.push(obj);
     }
 
-    console.log(out);
     return out;
   }
 }
