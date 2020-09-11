@@ -101,9 +101,9 @@ class LogManager {
   }
 
   async getHoursToday() {
-    const result = await this.sheetToObject("HoursToday!A1:E");
+    const result = await this.sheetToObject('HoursToday!A1:E');
     const out = [];
-    for(const person of result) {
+    for (const person of result) {
       if (person.name != '') {
         out.push(person);
       }
@@ -115,33 +115,39 @@ class LogManager {
     if (str === '') {
       return '';
     } else {
-      let splitString = str.replace(/[^A-Z0-9]/gi, '_').split('_').join('');
+      let splitString = str
+        .replace(/[^A-Z0-9]/gi, '_')
+        .split('_')
+        .join('');
 
       return splitString.charAt(0).toLowerCase() + splitString.slice(1);
     }
   }
 
+  noop([...args]) {}
+
   async sheetToObject(range) {
-    // log.sheetToObject('HoursToday!A1:E')
     const { result } = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: this.SPREADSHEET_ID,
       range,
     });
     const headers = result.values.shift();
+    const out = [];
 
     // Fix header formatting and make it serializable
     for (let i = 0; i < headers.length; i++) {
       headers[i] = this.camelize(headers[i]);
     }
 
-    const out = [];
-
     for (const row of result.values) {
       const obj = {};
       for (let i = 0; i < headers.length; i++) {
         try {
           obj[headers[i]] = row[i];
-        } catch {} // Handler just in case accessing values that don't exist
+        } catch(err) {
+          // Handler just in case accessing values that don't exist
+          this.noop(err);
+        }
       }
       out.push(obj);
     }
